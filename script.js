@@ -20,16 +20,45 @@ Book.prototype.info = function() {
 }
 
 function addBookToLibrary() {
-  // take in user input, create book object, add to DOM
+  const book = new Book('title', 'author', 125);
+  myLibrary.push(book);
 }
 
 function removeBookFromLibrary() {
-
+    const book = this.parentElement;
+    book.remove();
 }
 
 function showLibrary() {
-    for(let book in myLibrary) {
-        console.log(book);
-    }
+    const library = document.querySelector('.library');
+    for(const book of myLibrary) {
+        const li = document.createElement('li');
+        li.classList.add('book');
 
+        const button = document.createElement('button')
+        button.addEventListener('click', removeBookFromLibrary);
+        const img = document.createElement('img');
+        const h1 = document.createElement('h1');
+        const h2 = document.createElement('h2');
+        const p = document.createElement('p');
+
+        h1.classList.add('title');
+        h2.classList.add('author');
+
+        img.src = 'close-line.svg';
+        h1.textContent = book.title;
+        h2.textContent = book.author;
+        p.textContent = book.pages;
+
+        button.appendChild(img);
+        li.appendChild(button);
+        li.appendChild(h1);
+        li.appendChild(h2);
+        li.appendChild(p);
+
+        library.appendChild(li);
+    }
 }
+
+addBookToLibrary();
+showLibrary();
