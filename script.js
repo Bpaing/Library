@@ -22,18 +22,22 @@ Book.prototype.info = function() {
 function addBookToLibrary() {
   const book = new Book('title', 'author', 125);
   myLibrary.push(book);
+  console.log(myLibrary);
 }
 
 function removeBookFromLibrary() {
     const book = this.parentElement;
+    myLibrary.splice(book.dataset.index, 1);
     book.remove();
 }
 
 function showLibrary() {
     const library = document.querySelector('.library');
-    for(const book of myLibrary) {
+    for(let i = 0; i < myLibrary.length; i++) {
+        const book = myLibrary[i];
         const li = document.createElement('li');
         li.classList.add('book');
+        li.dataset.index = i;
 
         const button = document.createElement('button')
         button.addEventListener('click', removeBookFromLibrary);
