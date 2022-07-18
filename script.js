@@ -19,10 +19,38 @@ Book.prototype.info = function() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.haveRead()}`;
 }
 
+function parseForm(e) {
+    e.preventDefault();
+    console.log('i clicked the button');
+}
+
+function createForm() {
+    if (document.getElementById('book-form')) { return; }
+    const form = document.createElement('form');
+    form.setAttribute('id', 'book-form');
+    form.innerHTML = 
+    `
+        <label for="title">Title: </label>
+        <input type="text" id="title" name="title">
+        <label for="author">Author: </label>
+        <input type="text" id="author" name="author">
+        <label for="page-number">Number of Pages:</label>
+        <input type="number" id="page-number" name="page_number">
+        <input type="radio" id="read" name="was_read" value="read">
+        <label for="read">Read</label>
+        <input type="radio" id="unread" name="was_read" value="unread">
+        <label for="read">Not Read</label>
+        <button type='submit'>Submit</button>
+    `;
+    const body = document.querySelector('body');
+    const library = document.querySelector('.library');
+    body.insertBefore(form, library);
+    form.addEventListener('click', parseForm);
+}
+
 function addBookToLibrary() {
   const book = new Book('title', 'author', 125);
   myLibrary.push(book);
-  console.log(myLibrary);
 }
 
 function removeBookFromLibrary() {
@@ -33,6 +61,7 @@ function removeBookFromLibrary() {
 
 function showLibrary() {
     const library = document.querySelector('.library');
+    library.replaceChildren();
     for(let i = 0; i < myLibrary.length; i++) {
         const book = myLibrary[i];
         const li = document.createElement('li');
@@ -64,5 +93,10 @@ function showLibrary() {
     }
 }
 
+const newBook = document.querySelector('#new-book');
+newBook.addEventListener('click', createForm);
+addBookToLibrary();
+addBookToLibrary();
+addBookToLibrary();
 addBookToLibrary();
 showLibrary();
