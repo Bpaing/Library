@@ -11,6 +11,10 @@ Book.prototype.readContent = function () {
     this.read = true;
 }
 
+Book.prototype.forgetContent = function () {
+    this.read = false;
+}
+
 Book.prototype.haveRead = function() {
     return `${this.read ? 'already' : 'not'} read`;
 }
@@ -19,7 +23,18 @@ Book.prototype.info = function() {
     return `${this.title} by ${this.author}, ${this.pages} pages, ${this.haveRead()}`;
 }
 
-function parseForm(e) {
+function changeReadStatus() {
+    //toggle html/css appearance
+    const div = this.children[0];
+    const checkmark = div.children[0];
+    checkmark.classList.toggle('unread');
+
+    //negate current read status for array element
+    const book = myLibrary[this.dataset.index];
+    book.read ? book.forgetContent() : book.readContent();
+}
+
+function processForm(e) {
     e.preventDefault();
     console.log('i clicked the button');
 }
@@ -30,12 +45,15 @@ function createForm() {
     form.setAttribute('id', 'book-form');
     form.innerHTML = 
     `
-        <label for="title">Title: </label>
         <input type="text" id="title" name="title">
-        <label for="author">Author: </label>
+        <label for="title">Title: </label>
+
         <input type="text" id="author" name="author">
-        <label for="page-number">Number of Pages:</label>
+        <label for="author">Author: </label>
+
         <input type="number" id="page-number" name="page_number">
+        <label for="page-number">Number of Pages:</label>
+
         <input type="radio" id="read" name="was_read" value="read">
         <label for="read">Read</label>
         <input type="radio" id="unread" name="was_read" value="unread">
@@ -45,7 +63,7 @@ function createForm() {
     const body = document.querySelector('body');
     const library = document.querySelector('.library');
     body.insertBefore(form, library);
-    form.addEventListener('click', parseForm);
+    form.addEventListener('click', processForm);
 }
 
 function addBookToLibrary() {
@@ -53,22 +71,29 @@ function addBookToLibrary() {
   myLibrary.push(book);
 }
 
-function removeBookFromLibrary() {
-    const book = this.parentElement;
+function removeBookFromLibrary(e) {
+    e.stopPropagation();
+    const div = this.parentElement;
+    const book = div.parentElement;
     myLibrary.splice(book.dataset.index, 1);
     book.remove();
 }
 
 function showLibrary() {
     const library = document.querySelector('.library');
-    library.replaceChildren();
     for(let i = 0; i < myLibrary.length; i++) {
         const book = myLibrary[i];
         const li = document.createElement('li');
         li.classList.add('book');
         li.dataset.index = i;
+        li.addEventListener('click', changeReadStatus);
 
-        const button = document.createElement('button')
+        const div = document.createElement('div');
+        const button = document.createElement('button');
+        const checkmark = document.createElement('img');
+        checkmark.src = 'check-fill.svg';
+        checkmark.classList.add(book.read ? '' : 'unread');
+
         button.addEventListener('click', removeBookFromLibrary);
         const img = document.createElement('img');
         const h1 = document.createElement('h1');
@@ -83,8 +108,11 @@ function showLibrary() {
         h2.textContent = book.author;
         p.textContent = book.pages;
 
+        div.appendChild(checkmark);
+        div.appendChild(button);
         button.appendChild(img);
-        li.appendChild(button);
+
+        li.appendChild(div);
         li.appendChild(h1);
         li.appendChild(h2);
         li.appendChild(p);
@@ -95,8 +123,5 @@ function showLibrary() {
 
 const newBook = document.querySelector('#new-book');
 newBook.addEventListener('click', createForm);
-addBookToLibrary();
-addBookToLibrary();
-addBookToLibrary();
 addBookToLibrary();
 showLibrary();

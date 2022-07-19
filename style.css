@@ -22,8 +22,10 @@
     align-items: center;
 }
 
-.book button {
-    align-self: flex-end;
+.book div {
+    display:flex;
+    gap: 10px;
+    margin-left: auto;
 }
 
 .title {
@@ -33,4 +35,8 @@
 .author {
     font-size: 1.25rem;
     font-weight: normal;
+}
+
+.unread {
+    opacity: 0;
 }
