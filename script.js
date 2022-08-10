@@ -1,40 +1,28 @@
 let myLibrary = [];
 
-function Book(title, author, pages) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = false;
-}
+class Book {
+    constructor(title, author, pages) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = false;
+    }
 
-Book.prototype.readContent = function () {
-    this.read = true;
-}
+    readContent() {
+        this.read = true;
+    }
 
-Book.prototype.forgetContent = function () {
-    this.read = false;
-}
+    forgetContent() {
+        this.read = false;
+    }
 
-Book.prototype.haveRead = function() {
-    return `${this.read ? 'already' : 'not'} read`;
-}
+    haveRead() {
+        return `${this.read ? 'already' : 'not'} read`;
+    }
 
-Book.prototype.info = function() {
-    return `${this.title} by ${this.author}, ${this.pages} pages, ${this.haveRead()}`;
-}
-
-function addBookToLibrary(title, author, page_number, read) {
-  const book = new Book(title, author, page_number);
-  if (read) { book.readContent() };
-  myLibrary.push(book);
-}
-
-function removeBookFromLibrary(e) {
-    e.stopPropagation();
-    const div = this.parentElement;
-    const book = div.parentElement;
-    myLibrary.splice(book.dataset.index, 1);
-    book.remove();
+    info() {
+        return `${this.title} by ${this.author}, ${this.pages} pages, ${this.haveRead()}`;
+    }
 }
 
 function showLibrary() {
@@ -78,6 +66,20 @@ function showLibrary() {
 
         library.appendChild(li);
     }
+}
+
+function addBookToLibrary(title, author, page_number, read) {
+  const book = new Book(title, author, page_number);
+  if (read) { book.readContent() };
+  myLibrary.push(book);
+}
+
+function removeBookFromLibrary(e) {
+    e.stopPropagation();
+    const div = this.parentElement;
+    const book = div.parentElement;
+    myLibrary.splice(book.dataset.index, 1);
+    showLibrary();
 }
 
 function changeReadStatus() {
